@@ -1,0 +1,25 @@
+{
+  "name": "twitter-discord-embed-filtered-stream",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pranscript/twitter-discord-embed-filtered-stream.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pranscript/twitter-discord-embed-filtered-stream/issues"
+  },
+  "homepage": "https://github.com/pranscript/twitter-discord-embed-filtered-stream#readme",
+  "dependencies": {
+    "axios": "^1.2.1",
+    "dotenv": "^16.0.3",
+    "needle": "^3.2.0",
+    "twitter-api-sdk": "^1.2.1"
+  }
+}
