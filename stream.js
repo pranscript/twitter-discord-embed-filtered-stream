@@ -31,7 +31,7 @@ const tweetColor = {
     'Quote Tweet':1127128
 }
 
-// Set accordingly
+// Set accordingly 1357802861128736770
 const blacklist_ID= ['1357802861128736770']
 
 async function getAllRules() {
