@@ -3,15 +3,13 @@
 
 const needle = require('needle');
 const axios = require('axios');
-const Client = require('twitter-api-sdk').default;
 require('dotenv').config();
 
 const bearerToken = process.env.BEARER_TOKEN;
 const webhookURL = process.env.DISCORD_WEBHOOK
 const rulesURL = 'https://api.twitter.com/2/tweets/search/stream/rules';
-const streamURL = 'https://api.twitter.com/2/tweets/search/stream?expansions=author_id';
+const streamURL = 'https://api.twitter.com/2/tweets/search/stream?expansions=author_id,attachments.media_keys&media.fields=url,preview_image_url,type&user.fields=profile_image_url,public_metrics,username';
 
-const client = new Client(bearerToken);
 
 // Set Rules
 const rules = [
@@ -117,37 +115,21 @@ function streamConnect(retryAttempt) {
 
                 let parsedText = json.data.text.replace(/(?:https?|ftp):\/\/[\n\S]+/g, '');
 
-                client.tweets.findTweetById(json.data.id, {
-                    "expansions": [
-                        "attachments.media_keys",
-                        "author_id"
-                    ],
-                    "media.fields": [
-                        "preview_image_url",
-                        "type",
-                        "url"
-                    ],
-                    "user.fields": [
-                        "profile_image_url",
-                        "public_metrics",
-                        "username"
-                    ]
-                }).then( response =>{
-                    if(parseInt(response.includes.users[0].public_metrics.followers_count) >= process.env.MIN_FOLLOWER_COUNT){
+                    if(parseInt(json.includes.users[0].public_metrics.followers_count) >= process.env.MIN_FOLLOWER_COUNT){
 
                         let title = json.matching_rules[0].tag;
                         let color = tweetColor[json.matching_rules[0].tag];
-                        let profileImageURL = response.includes.users[0].profile_image_url;
-                        let username = `@`+response.includes.users[0].username;
-                        let followersCount = response.includes.users[0].public_metrics.followers_count;
-                        let tweetURL = `https://twitter.com/`+response.includes.users[0].username+`/status/`+json.data.id;
+                        let profileImageURL = json.includes.users[0].profile_image_url;
+                        let username = `@`+json.includes.users[0].username;
+                        let followersCount = json.includes.users[0].public_metrics.followers_count;
+                        let tweetURL = `https://twitter.com/`+json.includes.users[0].username+`/status/`+json.data.id;
 
                         let attachmentImageURL ='';
-                        if(response.includes !== undefined && response.includes.media !== undefined){
-                            if(response.includes.media[0].type == 'video'){
-                                attachmentImageURL= response.includes.media[0].preview_image_url
-                            }else if(response.includes.media[0].type == 'photo'){
-                                attachmentImageURL = response.includes.media[0].url
+                        if(json.includes !== undefined && json.includes.media !== undefined){
+                            if(json.includes.media[0].type == 'video'){
+                                attachmentImageURL= json.includes.media[0].preview_image_url
+                            }else if(json.includes.media[0].type == 'photo'){
+                                attachmentImageURL = json.includes.media[0].url
                             }
                         }
 
@@ -195,10 +177,6 @@ function streamConnect(retryAttempt) {
                                 return error;
                             });
                     }
-                }).catch(err =>{
-                    console.log("Error in Twitter API");
-                    process.exit(1);
-                })
             }
             retryAttempt = 0;
         } catch (e) {

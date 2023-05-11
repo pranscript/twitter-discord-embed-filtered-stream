@@ -1,6 +1,6 @@
 # Twitter-Discord Embed Filtered Stream Bot 🤖
 
- Monitors tweets and filters according to the rules set. Uses Twitter bearer token for authenticaion and discord webhook URL to post to a specific channel without getting access to others.
+ Monitors tweets and filters according to the rules set. Uses Twitter bearer token for authenticaion and discord webhook URL to post to a specific channel
 
 
 ## Features
